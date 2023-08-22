@@ -14,7 +14,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = () => {
-    navigate('/dashboard', { replace: true });
+    navigate('/resetpassword', { replace: true });
   };
 
   return (
@@ -22,32 +22,16 @@ export default function LoginForm() {
       <Stack spacing={3}>
         <TextField name="email" label="Email address" />
 
-        <TextField
-          name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
-        <Link href="/forgetpassword" variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
+      
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+        O T P
+      </LoadingButton>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-        Login
-      </LoadingButton>
     </>
   );
 }

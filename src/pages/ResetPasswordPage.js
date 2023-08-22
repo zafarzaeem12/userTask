@@ -8,7 +8,7 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
-import { LoginForm } from '../sections/auth/login';
+import { ResetPassword } from '../sections/auth/resetpassword';
 
 // ----------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
 
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
-              <Link href='/register' variant="subtitle2">Get started</Link>
+              <Link variant="subtitle2">Get started</Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>
@@ -98,7 +98,7 @@ export default function LoginPage() {
               </Typography>
             </Divider>
 
-            <LoginForm />
+            <ResetPassword />
           </StyledContent>
         </Container>
       </StyledRoot>

@@ -8,7 +8,7 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
-import { LoginForm } from '../sections/auth/login';
+import { Register } from '../sections/auth/register';
 
 // ----------------------------------------------------------------------
 
@@ -40,13 +40,13 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const mdUp = useResponsive('up', 'md');
 
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> Reegister | Minimal UI </title>
       </Helmet>
 
       <StyledRoot>
@@ -70,12 +70,12 @@ export default function LoginPage() {
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to Minimal
+              Sign up to Minimal
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>
-              Don’t have an account? {''}
-              <Link href='/register' variant="subtitle2">Get started</Link>
+              already have an account? {''}
+              <Link href="/login"   variant="subtitle2">Get started</Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>
@@ -98,7 +98,7 @@ export default function LoginPage() {
               </Typography>
             </Divider>
 
-            <LoginForm />
+            <Register />
           </StyledContent>
         </Container>
       </StyledRoot>

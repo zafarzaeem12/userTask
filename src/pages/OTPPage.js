@@ -1,14 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
+// sections
 import { styled } from '@mui/material/styles';
 import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
+import { OTP } from '../sections/auth/otp';
+
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
-// sections
-import { LoginForm } from '../sections/auth/login';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +43,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
+export default function OTPPage() {
   const mdUp = useResponsive('up', 'md');
 
   return (
@@ -75,7 +78,7 @@ export default function LoginPage() {
 
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
-              <Link href='/register' variant="subtitle2">Get started</Link>
+              <Link variant="subtitle2">Get started</Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>
@@ -98,7 +101,7 @@ export default function LoginPage() {
               </Typography>
             </Divider>
 
-            <LoginForm />
+            <OTP />
           </StyledContent>
         </Container>
       </StyledRoot>
