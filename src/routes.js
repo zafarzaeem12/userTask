@@ -12,7 +12,6 @@ import DashboardAppPage from './pages/DashboardAppPage';
 
 import RegisterPage from './pages/RegisterPage';
 import OTPPage from './pages/OTPPage';
-import CompleteProfilePage from './pages/CompleteProfilePage';
 import LoginPage from './pages/LoginPage';
 import ForgetPasswordPage from './pages/ForgetPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
@@ -40,10 +39,6 @@ export default function Router() {
     {
       path: 'otp',
       element: <OTPPage />,
-    },
-    {
-      path: 'completeprofile',
-      element: <CompleteProfilePage />,
     },
     {
       path: 'login',
