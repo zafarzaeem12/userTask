@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { AddUser } from '../thunk/UserReducers'
+import { AddUser , RemoveUser } from '../thunk/UserReducers'
 
 const UserSlice = createSlice({
     name:'User',
@@ -9,15 +9,30 @@ const UserSlice = createSlice({
         error : null
     },
     extraReducers(builder){
+
         builder.addCase(AddUser.pending , (state,action) => {
             state.isLoading = true;
          })
         builder.addCase(AddUser.fulfilled , (state,action) => {
             state.isLoading = false;
-            state.data.push(action.payload)
+            if(action.payload !== null && action.payload !== undefined){
+                 state.data.push(action.payload)   
+            }
             
          })
         builder.addCase(AddUser.rejected , (state,action) => {
+            state.isLoading = false;
+            state.error = action.error
+         })
+// ----------------------------------------------------------------------------------
+        builder.addCase(RemoveUser.pending , (state,action) => {
+            state.isLoading = true;
+         })
+        builder.addCase(RemoveUser.fulfilled , (state,action) => {
+            state.isLoading = false;
+            state.data.pop(action.payload)    
+         })
+        builder.addCase(RemoveUser.rejected , (state,action) => {
             state.isLoading = false;
             state.error = action.error
          })

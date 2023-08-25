@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
+import { useDispatch , useSelector } from 'react-redux'
+import { RemoveUser } from '../../../redux/thunk/UserReducers';
 import account from '../../../_mock/account';
-
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -25,14 +26,23 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+
+  const dispatch = useDispatch()
+
+  const UserData =  useSelector((state) => state.users.data)
+  const token = UserData.map((Data) => Data )
+  console.log("2222",token)
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
+     
   };
 
   const handleClose = () => {
     setOpen(null);
+   
+    dispatch(RemoveUser(token))
   };
 
   return (

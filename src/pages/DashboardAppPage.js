@@ -1,8 +1,12 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
+import { useSelector } from 'react-redux'
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
+import { api } from '../Apis'
+import { GetFunction } from '../Functions/GetFunction'
 // components
 import Iconify from '../components/iconify';
 // sections
@@ -20,9 +24,23 @@ import {
 
 // ----------------------------------------------------------------------
 
-export default function DashboardAppPage() {
+export default  function DashboardAppPage() {
+  const [ email ,setEmail ] = useState('')
+  const Userprofile = useSelector((state) => state.users.data)
   const theme = useTheme();
+  const token = Userprofile[0].data
+  const link = api.Show_Profile
 
+  const handleProfile = async () => {
+    const ui = await GetFunction(link,token)
+    setEmail(ui.data.email)
+
+  }
+  useEffect(() => {
+    handleProfile()
+  },[])
+
+console.log('Userprofiles', )
   return (
     <>
       <Helmet>
@@ -31,7 +49,7 @@ export default function DashboardAppPage() {
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Hi {email} , Welcome backs
         </Typography>
 
         <Grid container spacing={3}>

@@ -14,22 +14,30 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const checked = useSelector((state) => state.users.data);
+  console.log("checked",checked)
   const [showPassword, setShowPassword] = useState(false);
   const [email, Setemail] = useState('');
   const [password, Setpassword] = useState('');
-  const handleClick = () => {
-    const Data = {
-      email,
-      password,
-    };
-    dispatch(AddUser(Data));
-    setTimeout(() => {
-      return checked.map((data) => (data.status === 200 ? navigate('/dashboard/app') : navigate('/login')));
-    }, 3000);
+  const [errs , Seterr]  = useState('')
+  const handleClick = async () => {
+    try {
+      const Data = {
+        email,
+        password,
+      };
+  
+
+      await dispatch(AddUser(Data));
+      navigate('/dashboard/app');
+    } catch (err) {
+      console.error(err);
+    }
   };
+  
 
   return (
     <>
+    {errs }
       <Stack spacing={3}>
         <TextField name="email" label="Email address" value={email} onChange={(e) => Setemail(e.target.value)} />
 

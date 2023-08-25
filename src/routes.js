@@ -1,4 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -20,6 +21,8 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const checked = useSelector((state) => state.users.data);
+  console.log("checkedRouter" , checked)
   const routes = useRoutes([
     {
       path: '/dashboard',
@@ -33,16 +36,16 @@ export default function Router() {
       ],
     },
     {
+      path: 'login',
+      element: <LoginPage />,
+    },
+    {
       path: 'register',
       element: <RegisterPage />,
     },
     {
       path: 'otp',
       element: <OTPPage />,
-    },
-    {
-      path: 'login',
-      element: <LoginPage />,
     },
     {
       path: 'forgetpassword',
