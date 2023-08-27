@@ -14,5 +14,8 @@ export const api = {
     // Update_Profile: `${BaseUrl}update-profile`,
     // Auth apis end here 
 
+    // Task apis start here
+        CreateTask: `${BaseUrl}createtask`,
+    // Task apis end here
    
 };

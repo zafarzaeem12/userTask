@@ -26,21 +26,21 @@ import {
 
 export default  function DashboardAppPage() {
   const [ email ,setEmail ] = useState('')
-  const Userprofile = useSelector((state) => state.users.data)
+  const Userprofile = useSelector((state) => state.users.data[0].data)
   const theme = useTheme();
-  const token = Userprofile[0].data
-  const link = api.Show_Profile
+  // const token = Userprofile[0].data
+  // const link = api.Show_Profile
 
-  const handleProfile = async () => {
-    const ui = await GetFunction(link,token)
-    setEmail(ui.data.email)
+  // const handleProfile = async () => {
+  //   const ui = await GetFunction(link,token)
+  //   setEmail(ui.data.email)
 
-  }
-  useEffect(() => {
-    handleProfile()
-  },[])
+  // }
+  // useEffect(() => {
+  //   handleProfile()
+  // },[])
 
-console.log('Userprofiles', )
+    console.log(Userprofile)
   return (
     <>
       <Helmet>
@@ -49,7 +49,7 @@ console.log('Userprofiles', )
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi {email} , Welcome backs
+          Hi {Userprofile.name.split(' ').map((datas) => datas[0].toUpperCase() + datas.slice(1,5)) } , Welcome backs
         </Typography>
 
         <Grid container spacing={3}>

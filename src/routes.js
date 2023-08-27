@@ -16,13 +16,15 @@ import OTPPage from './pages/OTPPage';
 import LoginPage from './pages/LoginPage';
 import ForgetPasswordPage from './pages/ForgetPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import CreateTaskPage from './pages/CreateTaskPage';
+import TaskDetailPage from './pages/TaskDetailPage';
+import TaskPage from './pages/TaskPage';
+import UpdateTaskPage from './pages/UpdateTaskPage';
 
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  const checked = useSelector((state) => state.users.data);
-  console.log("checkedRouter" , checked)
   const routes = useRoutes([
     {
       path: '/dashboard',
@@ -31,6 +33,10 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
+        { path: 'createtask', element: <CreateTaskPage /> },
+        { path: 'gettask', element: <TaskPage /> },
+        { path: 'updatetask/:id', element: <UpdateTaskPage /> },
+        { path: 'gettask/:id', element: <TaskDetailPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],

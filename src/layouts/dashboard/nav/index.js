@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 // mock
+import { useDispatch , useSelector } from 'react-redux'
 import account from '../../../_mock/account';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
@@ -36,7 +37,9 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-
+  const Userprofile = useSelector((state) => state.users.data[0].data)
+  const photoURL = 'http://localhost:3000/'
+  const profileimage = Userprofile.user_image.map((data) => photoURL+data  )
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -60,11 +63,11 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar src={profileimage.map(url => url.replace("/public", ""))} alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {Userprofile.name.split(' ').map((datas) => datas[0].toUpperCase() + datas.slice(1))}
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
