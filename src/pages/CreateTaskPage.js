@@ -13,22 +13,25 @@ import 'react-clock/dist/Clock.css';
 export default function TaskForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.users.data[0].data.user_authentication  )
-  
+  const token = useSelector((state) => state?.users?.data[0]?.data)
+  const tc = token.user_authentication
+
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [dueDate, setDueDate] = useState(new Date());
 
-  const handleClick = async () => {
+  const handleClick =  () => {
     try {
       const taskData = {
         title,
         description: desc,
         due_date: moment(dueDate).format('YYYY-MM-DDTHH:mm:ss'),
       };
-      console.log("taskData",taskData)
-      await dispatch(AddTask({ data : taskData , token}));
-      navigate('/dashboard/gettask');
+      console.log("taskData",taskData , tc)
+      dispatch(AddTask({ data : taskData , tc }))
+      setTimeout(() => {
+        navigate('/dashboard/gettask');
+      }, 1000);
     } catch (err) {
       console.error(err);
     }

@@ -1,8 +1,10 @@
+/* eslint-disable */
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Card,
@@ -14,6 +16,7 @@ import {
   Popover,
   Checkbox,
   TableRow,
+  TableHead,
   MenuItem,
   TableBody,
   TableCell,
@@ -28,17 +31,20 @@ import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import { UserListHead } from '../sections/@dashboard/user/UserListHead';
 // mock
-import USERLIST from '../_mock/user';
-
+import data from '../_mock/user';
+import { GetTask } from '../redux/thunk/TaskReducers';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'title', label: 'Title', alignRight: false },
   { id: 'description', label: 'Description', alignRight: false },
   { id: 'due_date', label: 'Date', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'task_provider', label: 'Task-Provider', alignRight: false },
+  { id: 'task_assign_to', label: 'Task-Assigner', alignRight: false },
+  { id: 'task_status', label: 'Status', alignRight: false },
+  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -73,7 +79,11 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function UserPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const Userprofile = useSelector((state) => state?.users?.data[0]?.data);
+  const Tasks = useSelector((state) => state.tasks.data);
+  console.log('TasksTasks', Tasks);
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -87,6 +97,8 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [data, setdata] = useState([]);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -104,7 +116,7 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = data.map((n) => n.title);
       setSelected(newSelecteds);
       return;
     }
@@ -141,14 +153,28 @@ export default function UserPage() {
   };
 
   const handleRedirect = () => {
-    navigate('/dashboard/createtask')
-  }
+    navigate('/dashboard/createtask');
+  };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const handleLoad =  () => {
+     dispatch(GetTask(Userprofile ? Userprofile && Userprofile.user_authentication : null));
+    setdata(Tasks);
+  };
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const photoURL = 'http://localhost:3000/';
+
+  
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
+
+  const filteredUsers = applySortFilter(data, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
+
+  if(data){
+    useEffect(() => {
+      handleLoad()
+    },[data]);
+  }
 
   return (
     <>
@@ -167,24 +193,36 @@ export default function UserPage() {
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <dataToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        indeterminate={TABLE_HEAD > 0 && TABLE_HEAD < TABLE_HEAD.length}
+                        checked={TABLE_HEAD.length > 0 && TABLE_HEAD === TABLE_HEAD.length}
+                        //onChange={onSelectAllClick}
+                      />
+                    </TableCell>
+                    {TABLE_HEAD.map((headCell) => (
+                      <TableCell
+                        key={headCell.id}
+                        align={headCell.alignRight ? 'right' : 'left'}
+                        sortDirection={orderBy === headCell.id ? order : false}
+                      >
+                        {headCell.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { id, title, description, due_date, task_provider, task_assign_to, task_status } = row;
+                    const selectedUser = selected.indexOf(title) !== -1;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
@@ -194,23 +232,64 @@ export default function UserPage() {
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {title}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{company}</TableCell>
+                        <TableCell align="left">{description}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="left">{due_date}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-
-                        <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                        <TableCell component="th" scope="row" padding="none">
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            <Avatar
+                              alt={name}
+                              src={
+                                task_provider?.user_image
+                                  ? task_provider.user_image
+                                      .flat()
+                                      .filter((_, index) => index !== 2)
+                                      .map((data) => photoURL + data.replace('/public', ''))
+                                  : null
+                              }
+                            />
+                            <Typography variant="subtitle2" noWrap>
+                              {task_provider ? task_provider.name : null}
+                            </Typography>
+                          </Stack>
                         </TableCell>
 
+                        <TableCell component="th" scope="row" padding="none">
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            <Avatar
+                              alt={name}
+                              src={
+                                task_assign_to?.user_image
+                                  ? task_assign_to.user_image
+                                      .flat()
+                                      .filter((_, index) => index !== 2)
+                                      .map((data) => photoURL + data.replace('/public', ''))
+                                  : null
+                              }
+                            />
+                            <Typography variant="subtitle2" noWrap>
+                              {task_assign_to ? task_assign_to.name : null}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+
+                        <TableCell align="left"> 
+                        <Label 
+                        color={
+                        (task_status === 'To_do' && 'default') || 
+                        (task_status === 'In_progress' && 'primary') ||  
+                        (task_status === 'completed_by_assigner' && 'secondary') || 
+                        'success'}>{sentenceCase(task_status)}</Label>
+                        </TableCell>
+
+                      
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                             <Iconify icon={'eva:more-vertical-fill'} />
@@ -256,7 +335,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -274,7 +353,7 @@ export default function UserPage() {
         PaperProps={{
           sx: {
             p: 1,
-            width: 140,
+            width: 250,
             '& .MuiMenuItem-root': {
               px: 1,
               typography: 'body2',
@@ -283,6 +362,21 @@ export default function UserPage() {
           },
         }}
       >
+         <MenuItem>
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Assign Task
+        </MenuItem>
+
+        <MenuItem>
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Completed by Assigner
+        </MenuItem>
+
+        <MenuItem>
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Completed by Creater
+        </MenuItem>
+
         <MenuItem>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
@@ -296,3 +390,4 @@ export default function UserPage() {
     </>
   );
 }
+/* eslint-enable */

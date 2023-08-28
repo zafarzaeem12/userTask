@@ -16,6 +16,7 @@ export const api = {
 
     // Task apis start here
         CreateTask: `${BaseUrl}createtask`,
+        GetTask: `${BaseUrl}get`,
     // Task apis end here
    
 };

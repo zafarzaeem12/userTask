@@ -13,11 +13,13 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserReducers } from '../reducers/UserReducer'
+import { TaskReducers } from '../reducers/TaskReducer'
 
 
 
 const Rootreducers = combineReducers({
-    users: UserReducers            
+    users: UserReducers,
+    tasks:  TaskReducers           
  });
 
 const persistConfig  = {
