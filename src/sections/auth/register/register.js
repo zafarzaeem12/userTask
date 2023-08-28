@@ -34,8 +34,8 @@ export default function Register() {
       data.append('user_image', userimage); // Append the image file if selected
     }
     const link = api?.Register
-    await PostFunction(link , data)
-
+    const ui = await PostFunction(link , data)
+console.log('object',ui)
     const apiResponse = { email };
     localStorage.setItem('email', apiResponse.email);
     navigate('/otp', { replace: true });

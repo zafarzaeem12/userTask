@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
@@ -19,7 +20,7 @@ export default function LoginForm() {
   const [email, Setemail] = useState('');
   const [password, Setpassword] = useState('');
   const [errs , Seterr]  = useState('')
-  const handleClick = async () => {
+  const handleClick =  () => {
     try {
       const Data = {
         email,
@@ -27,7 +28,7 @@ export default function LoginForm() {
       };
   
 
-      await dispatch(AddUser(Data));
+       dispatch(AddUser(Data));
       navigate('/dashboard/app');
     } catch (err) {
       console.error(err);
