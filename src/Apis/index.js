@@ -1,3 +1,4 @@
+/* eslint-disable */
 const BaseUrl = 'http://localhost:3000/api/'
 
 export const api = {
@@ -7,6 +8,7 @@ export const api = {
         Login: `${BaseUrl}login`,
         Logout: `${BaseUrl}logout`,
         Show_Profile: `${BaseUrl}profile`,
+        SearchUser : `${BaseUrl}search?name=${name}`,
     // Resend_OTP : `${BaseUrl}resend-otp`,
     // Forget_Password: `${BaseUrl}forget-password`,
     // Update_Password: `${BaseUrl}update-password`,

@@ -4,6 +4,7 @@ import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import POSTS from '../_mock/blog';
 import { useState, useEffect } from 'react';
 // @mui
 import {
@@ -32,9 +33,11 @@ import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead } from '../sections/@dashboard/user/UserListHead';
+import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
 // mock
 import data from '../_mock/user';
 import { GetTask } from '../redux/thunk/TaskReducers';
+import { SearchUser } from '../redux/thunk/UserReducers'
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -156,42 +159,49 @@ export default function UserPage() {
     navigate('/dashboard/createtask');
   };
 
-  const handleLoad =  () => {
-     dispatch(GetTask(Userprofile ? Userprofile && Userprofile.user_authentication : null));
+  const handleLoad = () => {
+    dispatch(GetTask(Userprofile ? Userprofile && Userprofile.user_authentication : null));
     setdata(Tasks);
   };
 
+  const SearchUsers = (name) => {
+    const auth  = Userprofile.user_authentication
+    dispatch(SearchUser({ name ,  auth  }))
+  }
+
   const photoURL = 'http://localhost:3000/';
 
-  
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const filteredUsers = applySortFilter(data, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
-  if(data){
+  if (data) {
     useEffect(() => {
-      handleLoad()
-    },[data]);
+      handleLoad();
+    }, [data]);
   }
 
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Task | Minimal UI </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Task
           </Typography>
           <Button onClick={() => handleRedirect()} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New Task
           </Button>
         </Stack>
 
+        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+          <BlogPostsSearch posts={SearchUsers} />
+        </Stack>
         <Card>
           <dataToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
@@ -280,16 +290,19 @@ export default function UserPage() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left"> 
-                        <Label 
-                        color={
-                        (task_status === 'To_do' && 'default') || 
-                        (task_status === 'In_progress' && 'primary') ||  
-                        (task_status === 'completed_by_assigner' && 'secondary') || 
-                        'success'}>{sentenceCase(task_status)}</Label>
+                        <TableCell align="left">
+                          <Label
+                            color={
+                              (task_status === 'To_do' && 'default') ||
+                              (task_status === 'In_progress' && 'primary') ||
+                              (task_status === 'completed_by_assigner' && 'secondary') ||
+                              'success'
+                            }
+                          >
+                            {sentenceCase(task_status)}
+                          </Label>
                         </TableCell>
 
-                      
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                             <Iconify icon={'eva:more-vertical-fill'} />
@@ -362,19 +375,19 @@ export default function UserPage() {
           },
         }}
       >
-         <MenuItem>
+        <MenuItem>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-            Assign Task
+          Assign Task
         </MenuItem>
 
         <MenuItem>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-            Completed by Assigner
+          Completed by Assigner
         </MenuItem>
 
         <MenuItem>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-            Completed by Creater
+          Completed by Creater
         </MenuItem>
 
         <MenuItem>

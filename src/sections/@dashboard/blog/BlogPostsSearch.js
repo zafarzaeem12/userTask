@@ -19,6 +19,7 @@ BlogPostsSearch.propTypes = {
 };
 
 export default function BlogPostsSearch({ posts }) {
+  console.log(posts)
   return (
     <Autocomplete
       sx={{ width: 280 }}
@@ -31,7 +32,7 @@ export default function BlogPostsSearch({ posts }) {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search post..."
+          placeholder="Search Task Assigner"
           InputProps={{
             ...params.InputProps,
             startAdornment: (
