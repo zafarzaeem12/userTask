@@ -1,5 +1,4 @@
 import { Navigate, useRoutes } from 'react-router-dom';
-import { useSelector } from 'react-redux'
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -27,23 +26,8 @@ import UpdateTaskPage from './pages/UpdateTaskPage';
 export default function Router() {
   const routes = useRoutes([
     {
-      path: '/dashboard',
-      element: <DashboardLayout />,
-      children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
-        { path: 'createtask', element: <CreateTaskPage /> },
-        { path: 'gettask', element: <TaskPage /> },
-        { path: 'updatetask/:id', element: <UpdateTaskPage /> },
-        { path: 'gettask/:id', element: <TaskDetailPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
-      ],
-    },
-    {
-      path: 'login',
-      element: <LoginPage />,
+      path: '/login',
+      element: <LoginPage />, index: true
     },
     {
       path: 'register',
@@ -60,6 +44,21 @@ export default function Router() {
     {
       path: 'resetpassword',
       element: <ResetPasswordPage />,
+    },
+    {
+      path: '/dashboard',
+      element: <DashboardLayout />,
+      children: [
+        { element: <Navigate to="/dashboard/app" /> },
+        { path: 'app', element: <DashboardAppPage /> },
+        { path: 'user', element: <UserPage /> },
+        { path: 'createtask', element: <CreateTaskPage /> },
+        { path: 'gettask', element: <TaskPage /> },
+        { path: 'updatetask/:id', element: <UpdateTaskPage /> },
+        { path: 'gettask/:id', element: <TaskDetailPage /> },
+        { path: 'products', element: <ProductsPage /> },
+        { path: 'blog', element: <BlogPage /> },
+      ],
     },
     {
       element: <SimpleLayout />,

@@ -1,11 +1,15 @@
+/* eslint no-use-before-define: 0 */  // --> OFF
 import axios from 'axios';
 
-export const PostFunction = async (url, payload, token) => {
+export const PostFunction = async (url, payload, token = null) => {
   try {
-    const headers = {
-      'Authorization': `Bearer ${token}`,
-    };
+    const headers = {}
 
+    if(token){   
+      headers.Authorization = `Bearer ${token}`;
+    }
+      
+  
     let config = {
       method: 'POST',
       url,

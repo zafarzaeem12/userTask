@@ -15,11 +15,12 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const checked = useSelector((state) => state.users.data);
-  console.log("checked",checked)
+  console.log("checkedswwwwwwwww",checked)
   const [showPassword, setShowPassword] = useState(false);
   const [email, Setemail] = useState('');
   const [password, Setpassword] = useState('');
   const [errs , Seterr]  = useState('')
+
   const handleClick =  () => {
     try {
       const Data = {

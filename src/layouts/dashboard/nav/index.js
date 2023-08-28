@@ -37,9 +37,9 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-  const Userprofile = useSelector((state) => state.users.data[0].data)
+  const Userprofile = useSelector((state) => state?.users?.data[0]?.data)
   const photoURL = 'http://localhost:3000/'
-  const profileimage = Userprofile.user_image.map((data) => photoURL+data  )
+  const profileimage = Userprofile?.user_image?.map((data) => photoURL+data  )
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -63,15 +63,15 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src={profileimage.map(url => url.replace("/public", ""))} alt="photoURL" />
+            <Avatar src={profileimage ? profileimage && profileimage?.map(url => url.replace("/public", "")) : null} alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {Userprofile.name.split(' ').map((datas) => datas[0].toUpperCase() + datas.slice(1))}
+                {Userprofile ? Userprofile && Userprofile.name.split(' ').map((datas) => datas[0].toUpperCase() + datas.slice(1)) : null }
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                {/* {account.role} */}
               </Typography>
             </Box>
           </StyledAccount>

@@ -1,3 +1,4 @@
+/* eslint no-use-before-define: 0 */  // --> OFF
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
@@ -31,7 +32,8 @@ export default function AccountPopover() {
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
-  const Userprofile = useSelector((state) => state.users.data[0].data)
+  const Userprofile = useSelector((state) => state?.users?.data[0]?.data)
+
   const photoURL = 'http://localhost:3000/'
   
   const [open, setOpen] = useState(null);
@@ -43,13 +45,19 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
-    dispatch(RemoveUser(Userprofile.user_authentication))
-    navigate('/login')
+    if(Userprofile){
+      dispatch(RemoveUser(Userprofile.user_authentication))
+      navigate('/login')
+    }else{
+      navigate('/dashboard/app')
+    }
+    
+    
   };
 
 
-  const profileimage = Userprofile.user_image.map((data) => photoURL+data  )
-
+  const profileimage = Userprofile?.user_image?.map((data) => photoURL+data  )
+  
   return (
     <>
       <IconButton
@@ -69,7 +77,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={ profileimage.map(url => url.replace("/public", "")) } alt="photoURL" />
+        <Avatar src={ profileimage ? profileimage && profileimage.map(url => url.replace("/public", "")) : null } alt="photoURL" />
       </IconButton>
 
       <Popover
@@ -93,10 +101,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {Userprofile.name}
+            {Userprofile ? Userprofile && Userprofile.name : null}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {Userprofile.email}
+            {Userprofile ? Userprofile && Userprofile.email : null }
           </Typography>
         </Box>
 
