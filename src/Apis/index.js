@@ -1,7 +1,7 @@
 /* eslint-disable */
 const BaseUrl = 'http://localhost:3000/api/'
 
-export const api = {
+export const    api = {
     // Auth apis start here 
         Register: `${BaseUrl}create_new_User`,
         OTP: `${BaseUrl}otp_verify`,
@@ -19,6 +19,7 @@ export const api = {
     // Task apis start here
         CreateTask: `${BaseUrl}createtask`,
         GetTask: `${BaseUrl}get`,
+        TaskAssigned : `${BaseUrl}task_assigned/`,
     // Task apis end here
    
 };

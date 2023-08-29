@@ -34,18 +34,6 @@ const UserSlice = createSlice({
       state.isLoading = false;
       state.error = action.error;
     });
-    //   -----------------------------------------------------------------------------------
-    builder.addCase(SearchUser.pending, (state, action) => {
-      state.isLoading = true;
-    });
-    builder.addCase(SearchUser.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.data = action.payload;
-    });
-    builder.addCase(SearchUser.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.error;
-    });
   },
 });
 

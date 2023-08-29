@@ -26,6 +26,7 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  TextField
 } from '@mui/material';
 // components
 import Label from '../components/label';
@@ -36,8 +37,10 @@ import { UserListHead } from '../sections/@dashboard/user/UserListHead';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
 // mock
 import data from '../_mock/user';
-import { GetTask } from '../redux/thunk/TaskReducers';
-import { SearchUser } from '../redux/thunk/UserReducers'
+import { GetTask , TaskAssigned } from '../redux/thunk/TaskReducers';
+import { SearchUser } from '../redux/thunk/UserReducers';
+import { GetFunction } from '../Functions/GetFunction';
+import {api} from '../Apis'
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -86,7 +89,7 @@ export default function UserPage() {
   const dispatch = useDispatch();
   const Userprofile = useSelector((state) => state?.users?.data[0]?.data);
   const Tasks = useSelector((state) => state.tasks.data);
-  console.log('TasksTasks', Tasks);
+  const tc = Userprofile.user_authentication
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -103,10 +106,18 @@ export default function UserPage() {
 
   const [data, setdata] = useState([]);
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
-  };
+  const [name , setName] = useState("")
 
+  const [searchname , setsearchname] = useState("")
+
+  const [selectedUser , SetselectedUser ] = useState([])
+
+  const [ids , Setids] = useState("")
+
+  const handleOpenMenu = (event , _id) => {
+    setOpen(event.currentTarget);
+    Setids(_id)
+  };
   const handleCloseMenu = () => {
     setOpen(null);
   };
@@ -164,10 +175,24 @@ export default function UserPage() {
     setdata(Tasks);
   };
 
-  const SearchUsers = (name) => {
-    const auth  = Userprofile.user_authentication
-    dispatch(SearchUser({ name ,  auth  }))
+  const handleSearch = async (value ) => {
+    const link = api.SearchUser+value;
+    const searchterm = await GetFunction(link , Userprofile.user_authentication)
+      if(searchterm.message === "User Searched"){
+        setsearchname(searchterm.data)
+
+      }
   }
+
+  const Assign_Task = (ids) => {
+    const tasks = {
+      task_assign_to : selectedUser,
+      task_provider : Userprofile ? Userprofile && Userprofile._id : null
+    }
+    dispatch(TaskAssigned({paramsid : ids , data : tasks ,  tc}))
+  }
+
+ 
 
   const photoURL = 'http://localhost:3000/';
 
@@ -176,12 +201,11 @@ export default function UserPage() {
   const filteredUsers = applySortFilter(data, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
-
-  if (data) {
-    useEffect(() => {
-      handleLoad();
-    }, [data]);
-  }
+  
+  useEffect(() => {
+    handleLoad();
+  }, [data]);
+  
 
   return (
     <>
@@ -200,7 +224,19 @@ export default function UserPage() {
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <BlogPostsSearch posts={SearchUsers} />
+        <TextField
+          name="name"
+          type="text"
+          label="Name"
+          value={name}
+          onChange={(e) => {
+            const newName = e.target.value;
+            setName(newName); // Update the local state
+            handleSearch(newName); // Call the search function
+          }}
+        
+        />
+          <BlogPostsSearch posts={searchname} SetselectedUser={SetselectedUser} />
         </Stack>
         <Card>
           <dataToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
@@ -231,11 +267,11 @@ export default function UserPage() {
                 </TableHead>
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, title, description, due_date, task_provider, task_assign_to, task_status } = row;
+                    const { _id, title, description, due_date, task_provider, task_assign_to, task_status } = row;
                     const selectedUser = selected.indexOf(title) !== -1;
-
+                    
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={_id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
                         </TableCell>
@@ -303,8 +339,8 @@ export default function UserPage() {
                           </Label>
                         </TableCell>
 
-                        <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                        <TableCell align="right" >
+                          <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event , _id)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -375,8 +411,8 @@ export default function UserPage() {
           },
         }}
       >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+        <MenuItem onClick={() => Assign_Task(ids)}>
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }}  />
           Assign Task
         </MenuItem>
 

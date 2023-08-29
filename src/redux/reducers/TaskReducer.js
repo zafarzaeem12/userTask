@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { AddTask , GetTask  } from '../thunk/TaskReducers'
+import { AddTask , GetTask  , TaskAssigned } from '../thunk/TaskReducers'
 
 const TaskSlice = createSlice({
     name:'Task',
@@ -41,7 +41,21 @@ const TaskSlice = createSlice({
             state.isLoading = false;
             state.error = action.error
          })
-      
+      // ---------------------------------------------------------------------
+
+      builder.addCase(TaskAssigned.pending , (state,action) => {
+        state.isLoading = true;
+     })
+    builder.addCase(TaskAssigned.fulfilled , (state,action) => {
+        console.log(action.payload)
+        state.isLoading = false;
+        state.data = action.payload
+        
+     })
+    builder.addCase(TaskAssigned.rejected , (state,action) => {
+        state.isLoading = false;
+        state.error = action.error
+     })
     }
 })
 

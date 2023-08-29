@@ -12,23 +12,10 @@ const AddUser = createAsyncThunk('user/login', async (data) => {
     return response;
 });
 
-const SearchUser = createAsyncThunk('user/search', async (arg) => {
-  const link = api?.SearchUser;
-  const response = await GetFunction(link, arg);
-  console.log("responsesearched",response)
-  if (response) {
-    return response.data
-    ;
-  } 
-    return response;
-});
-
-
-
 const RemoveUser = createAsyncThunk('user/logout', async (data) => {
   const link = api?.Logout;
   const response = await PostFunction(link, data);
   return response;
 });
 
-export { AddUser,SearchUser ,RemoveUser };
+export { AddUser ,RemoveUser };
