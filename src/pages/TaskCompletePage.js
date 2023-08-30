@@ -37,7 +37,7 @@ import { UserListHead } from '../sections/@dashboard/user/UserListHead';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
 // mock
 import data from '../_mock/user';
-import { GetTask , TaskAssigned , CompletedByProvider } from '../redux/thunk/TaskReducers';
+import { GetTask , TaskAssigned , UserAssignTask , CompletedByAssigner } from '../redux/thunk/TaskReducers';
 import { SearchUser } from '../redux/thunk/UserReducers';
 import { GetFunction } from '../Functions/GetFunction';
 import {api} from '../Apis'
@@ -72,23 +72,25 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    if (query) {
+      return array.filter((_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    }
+    return stabilizedThis.map((el) => el[0]);
   }
-  return stabilizedThis.map((el) => el[0]);
-}
+  
 
 export default function UserPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const Userprofile = useSelector((state) => state?.users?.data[0]?.data);
-  const Tasks = useSelector((state) => state.tasks.data);
+  const Tasks = useSelector((state) => state.tasks.data.data);
+  const MessageTasks = useSelector((state) => state.tasks.data.message);
   const tc = Userprofile.user_authentication
   const [open, setOpen] = useState(null);
 
@@ -172,38 +174,29 @@ export default function UserPage() {
     navigate('/dashboard/createtask');
   };
 
-  const handleLoad = () => {
-    dispatch(GetTask(Userprofile ? Userprofile && Userprofile.user_authentication : null));
-    setdata(Tasks);
-  };
 
-  const handleSearch = async (value ) => {
-    const link = api.SearchUser+value;
-    const searchterm = await GetFunction(link , Userprofile.user_authentication)
-      if(searchterm.message === "User Searched"){
-        setsearchname(searchterm.data)
 
-      }
+  const handleUserLoad = () => {
+    const data = window.location.href.split('/')
+    const routerId = data.pop()
+    if(routerId == Userprofile._id ) {
+        dispatch(UserAssignTask(tc))
+        setdata(Tasks);
+    }
   }
+  
 
   const Assign_Task = (ids) => {
+    const data = window.location.href.split('/')
+    const routerId = data.pop()
     const tasks = {
-      task_assign_to : selectedUser,
-      task_provider : Userprofile ? Userprofile && Userprofile._id : null
+      task_assign_to : Userprofile._id,
     }
-    SetassignStatus(dispatch(TaskAssigned({paramsid : ids , data : tasks ,  tc})))
+    if(routerId == Userprofile._id ) {
+        SetassignStatus(dispatch(CompletedByAssigner({paramsid : ids , data : tasks ,  tc})))
+    }
     
   }
-
-  const Completed_Task = (ids) => {
-    const tasks = {
-      task_provider : Userprofile ? Userprofile && Userprofile._id : null
-    }
-   dispatch(CompletedByProvider({paramsid : ids, data : tasks ,  tc}))
-    
-  }
-
-  
 
  
 
@@ -216,7 +209,7 @@ export default function UserPage() {
   const isNotFound = !filteredUsers.length && !!filterName;
   
   useEffect(() => {
-    handleLoad();
+    handleUserLoad();
   }, [data , assignStatus]);
   
 
@@ -229,28 +222,14 @@ export default function UserPage() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Task
+            {MessageTasks}
           </Typography>
           <Button onClick={() => handleRedirect()} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New Task
           </Button>
         </Stack>
 
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-        <TextField
-          name="name"
-          type="text"
-          label="Name"
-          value={name}
-          onChange={(e) => {
-            const newName = e.target.value;
-            setName(newName); // Update the local state
-            handleSearch(newName); // Call the search function
-          }}
-        
-        />
-          <BlogPostsSearch posts={searchname} SetselectedUser={SetselectedUser} />
-        </Stack>
+       
         <Card>
           <dataToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
@@ -425,23 +404,8 @@ export default function UserPage() {
         }}
       >
         <MenuItem onClick={() => Assign_Task(ids)}>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }}  />
-          Assign Task
-        </MenuItem>
-
-        <MenuItem onClick={() => Completed_Task(ids)}> 
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Completed by Creater
-        </MenuItem>
-
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
+          Completed by Assigner
         </MenuItem>
       </Popover>
     </>

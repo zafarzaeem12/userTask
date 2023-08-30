@@ -30,10 +30,38 @@ const TaskAssigned = createAsyncThunk('user/task-assign' , async ({paramsid , da
   return response;
 })
 
+const UserAssignTask  = createAsyncThunk('user/get-user-task' , async (tc) => {
+  const link = api?.UserTaskAssigned;
+  const response = await GetFunction(link , tc);
+  return response;
+})
+
+const CompletedByAssigner  = createAsyncThunk('user/get-assigner-task' , async ({paramsid,data,tc  }) => {
+  const link = api?.CompletedAssigner+paramsid;
+  const response = await PutFunction(link ,data , tc);
+  return response;
+})
+
+
+const CompletedByProvider  = createAsyncThunk('user/get-completed-task' , async ({paramsid,data,tc  }) => {
+  const link = api?.TaskCompleted+paramsid;
+  console.log("response",link , tc)
+  const response = await PutFunction(link ,data , tc);
+  return response;
+})
+
+
 // const RemoveUser = createAsyncThunk('user/logout', async (data) => {
 //   const link = api?.Logout;
 //   const response = await PostFunction(link, data);
 //   return response;
 // });
 
-export { AddTask , GetTask  , TaskAssigned};
+export { 
+  AddTask , 
+  GetTask  , 
+  TaskAssigned , 
+  UserAssignTask , 
+  CompletedByAssigner ,
+  CompletedByProvider
+};

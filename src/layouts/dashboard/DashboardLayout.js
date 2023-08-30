@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import {  useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -33,11 +34,13 @@ const Main = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
+  
+  const Userprofile = useSelector((state) => state?.users?.data[0]?.data)
   const [open, setOpen] = useState(false);
 
   return (
     <StyledRoot>
-      <Header onOpenNav={() => setOpen(true)} />
+      <Header onOpenNav={() => setOpen(true)} Userprofile={Userprofile} />
 
       <Nav openNav={open} onCloseNav={() => setOpen(false)} />
 

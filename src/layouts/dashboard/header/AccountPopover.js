@@ -27,12 +27,10 @@ const MENU_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
+export default function AccountPopover({Userprofile}) {
 
   const dispatch = useDispatch()
   const navigate = useNavigate();
-
-  const Userprofile = useSelector((state) => state?.users?.data[0]?.data)
 
   const photoURL = 'http://localhost:3000/'
   

@@ -20,6 +20,9 @@ export const    api = {
         CreateTask: `${BaseUrl}createtask`,
         GetTask: `${BaseUrl}get`,
         TaskAssigned : `${BaseUrl}task_assigned/`,
+        UserTaskAssigned : `${BaseUrl}usertask/`,
+        CompletedAssigner : `${BaseUrl}task_onboarding/`,
+        TaskCompleted :  `${BaseUrl}taskcompleted/`,
     // Task apis end here
    
 };

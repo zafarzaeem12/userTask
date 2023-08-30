@@ -1,4 +1,7 @@
+/* eslint-disable */
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types';
+
 import { NavLink as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, List, ListItemText } from '@mui/material';
@@ -32,10 +35,17 @@ NavItem.propTypes = {
 function NavItem({ item }) {
   const { title, path, icon, info } = item;
 
+  const Userprofile = useSelector((state) => state?.users?.data[0]?.data);
+
+  // Check if the path contains :id placeholder
+  const modifiedPath = path.includes(':id')
+    ? path.replace(':id', Userprofile?._id || '')
+    : path;
+
   return (
     <StyledNavItem
       component={RouterLink}
-      to={path}
+      to={modifiedPath}
       sx={{
         '&.active': {
           color: 'text.primary',

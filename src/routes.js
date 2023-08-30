@@ -19,14 +19,14 @@ import CreateTaskPage from './pages/CreateTaskPage';
 import TaskDetailPage from './pages/TaskDetailPage';
 import TaskPage from './pages/TaskPage';
 import UpdateTaskPage from './pages/UpdateTaskPage';
-
-
+import TaskAssignPage from './pages/TaskAssignPage';
+import TaskCompletePage from './pages/TaskCompletePage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
   const routes = useRoutes([
     {
-      path: '/login',
+      path: 'login',
       element: <LoginPage />, index: true
     },
     {
@@ -56,6 +56,8 @@ export default function Router() {
         { path: 'gettask', element: <TaskPage /> },
         { path: 'updatetask/:id', element: <UpdateTaskPage /> },
         { path: 'gettask/:id', element: <TaskDetailPage /> },
+        { path: 'assigntask/:id', element: <TaskAssignPage /> },
+        { path: 'completetask/:id', element: <TaskCompletePage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],
