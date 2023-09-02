@@ -32,13 +32,13 @@ export default function AccountPopover({Userprofile}) {
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
-  const photoURL = 'http://localhost:3000/'
+  const photoURL = 'http://localhost:3000'
   
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
-     
+
   };
 
   const handleClose = () => {
@@ -54,8 +54,7 @@ export default function AccountPopover({Userprofile}) {
   };
 
 
-  const profileimage = Userprofile?.user_image?.map((data) => photoURL+data  )
-  
+  const profileimage = Userprofile?.user_image
   return (
     <>
       <IconButton
@@ -75,7 +74,7 @@ export default function AccountPopover({Userprofile}) {
           }),
         }}
       >
-        <Avatar src={ profileimage ? profileimage && profileimage.map(url => url.replace("/public", "")) : null } alt="photoURL" />
+         <Avatar src={ profileimage ? photoURL+profileimage.replace("public", "") : null } alt="photoURL" />
       </IconButton>
 
       <Popover

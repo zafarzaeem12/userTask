@@ -307,10 +307,7 @@ export default function UserPage() {
                               alt={name}
                               src={
                                 task_provider?.user_image
-                                  ? task_provider.user_image
-                                      .flat()
-                                      .filter((_, index) => index !== 2)
-                                      .map((data) => photoURL + data.replace('/public', ''))
+                                  ? photoURL+task_provider?.user_image.replace("public", "")
                                   : null
                               }
                             />
@@ -326,10 +323,7 @@ export default function UserPage() {
                               alt={name}
                               src={
                                 task_assign_to?.user_image
-                                  ? task_assign_to.user_image
-                                      .flat()
-                                      .filter((_, index) => index !== 2)
-                                      .map((data) => photoURL + data.replace('/public', ''))
+                                ? photoURL+task_assign_to?.user_image.replace("public", "")
                                   : null
                               }
                             />

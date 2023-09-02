@@ -39,7 +39,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
   const Userprofile = useSelector((state) => state?.users?.data[0]?.data)
   const photoURL = 'http://localhost:3000/'
-  const profileimage = Userprofile?.user_image?.map((data) => photoURL+data  )
+  const profileimage = Userprofile?.user_image
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src={profileimage ? profileimage && profileimage?.map(url => url.replace("/public", "")) : null} alt="photoURL" />
+          <Avatar src={ profileimage ? photoURL+profileimage.replace("public", "") : null } alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
