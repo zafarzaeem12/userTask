@@ -18,4 +18,9 @@ const RemoveUser = createAsyncThunk('user/logout', async (data) => {
   return response;
 });
 
-export { AddUser ,RemoveUser };
+const SearchUser = createAsyncThunk('user/search', async (data) => {
+  const link = api?.SearchUser;
+  const response = await PostFunction(link, data);
+  return response;
+});
+export { AddUser ,RemoveUser , SearchUser };

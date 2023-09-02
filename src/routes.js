@@ -26,7 +26,7 @@ import TaskCompletePage from './pages/TaskCompletePage';
 export default function Router() {
   const routes = useRoutes([
     {
-      path: 'login',
+      path: '/login',
       element: <LoginPage />, index: true
     },
     {
@@ -46,7 +46,7 @@ export default function Router() {
       element: <ResetPasswordPage />,
     },
     {
-      path: '/dashboard',
+      path: 'dashboard',
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" /> },
